@@ -4,6 +4,7 @@ const userSchema = require("../model/userSchema");
 const userRoute = express.Router();
 
 import bcrypt from 'bcrypt.js';
+import { createError } from "../utilities/error.js";
 import jwt from "jsonwebtoken";
 
 // Router.post('/AddUser',register);
