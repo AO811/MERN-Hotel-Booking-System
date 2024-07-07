@@ -1,5 +1,4 @@
 import express from 'express';
-const Router=express.Router();
 const mongoose = require("mongoose");
 const bookingSchema = require("../model/bookingSchema.js")
 const bookingRoute = express.Router();
