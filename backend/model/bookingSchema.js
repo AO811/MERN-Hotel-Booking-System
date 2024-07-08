@@ -9,7 +9,7 @@ const bookingSchema = new mongoose.Schema({
     checkoutdate: { type: Date, required: true },
     adhaar: { type: String, required: true }
 }, {
-    collection: "bookings", 
+    collection: "booking", 
     timestamps: true, 
 });
 
