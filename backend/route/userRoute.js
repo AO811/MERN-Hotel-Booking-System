@@ -1,7 +1,7 @@
 const express = require("express");
 const mongoose = require("mongoose");
 const userRoute = express.Router();
-const bcrypt = require('bcrypt');
+const bcrypt = require('bcryptjs');
 const {deleteuser, getAllUser, login, register, updateUser} = require("../controller/user");
 
 userRoute.post('/AddUser',register);

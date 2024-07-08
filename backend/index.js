@@ -8,7 +8,7 @@ const app=express();
 const userRoute = require("./route/userRoute");
 const bookingRoute = require("./route/bookingRoute");
 const authRoute = require("./route/authRoute");
-const bcrypt = require('bcrypt');
+const bcrypt = require('bcryptjs');
 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({extended:true}))
