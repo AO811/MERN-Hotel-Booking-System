@@ -1,5 +1,4 @@
-import express from "express";
-
+const express = require("express");
 const authRoute = express.Router();
 
 authRouter.get('/checkauthentication',verify,(req,res,next)=>{
@@ -7,4 +6,4 @@ authRouter.get('/checkauthentication',verify,(req,res,next)=>{
     res.send("You are authenticated");
 })
 
-export default Router;
+module.exports = Router;

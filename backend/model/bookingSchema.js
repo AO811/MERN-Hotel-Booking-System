@@ -1,4 +1,3 @@
-import mongoose from "mongoose";
 const mongoose = require("mongoose")
 const bookingSchema = new mongoose.Schema({
     "name": { type: String, required: true },
@@ -12,4 +11,4 @@ const bookingSchema = new mongoose.Schema({
     collection: "booking"
 })
 
-export default mongoose.model("Room", bookingSchema);
+module.exports =  mongoose.model("Room", bookingSchema);

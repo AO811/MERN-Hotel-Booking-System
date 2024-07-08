@@ -1,4 +1,3 @@
-
 import {createError} from '../utilities/error.js';
 import jwt from 'jsonwebtoken';
 export const verify=async(req,res,next)=>{
