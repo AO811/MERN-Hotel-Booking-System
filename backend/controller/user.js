@@ -71,11 +71,14 @@ exports.updateUser=async(req,res,next)=>{
         next(error);
     }
 }
-exports.getAllUser=async(req,res,next)=>{
+exports.getAllUser = async (req, res, next) => {
     try {
-        const users=await User.find();
+        const users = await User.find();
+        if (!users) {
+            return res.status(404).json({ message: 'No users found' });
+        }
         res.status(200).json(users);
     } catch (error) {
         next(error);
     }
-}
+};

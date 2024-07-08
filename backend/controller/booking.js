@@ -36,7 +36,10 @@ exports.deleteRoom = async (req, res, next) => {
 exports.getAllRooms = async (req, res, next) => {
     try {
         const rooms = await Room.find();
-        res.json(rooms);
+        if (!rooms) {
+            return res.status(404).json({ message: 'No rooms found' });
+        }
+        res.status(200).json(rooms);
     } catch (error) {
         next(error);
     }
