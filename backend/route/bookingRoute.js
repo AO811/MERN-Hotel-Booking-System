@@ -2,7 +2,7 @@ const express = require("express");
 const mongoose = require("mongoose");
 const bookingRoute = express.Router();
 
-import { createRoom, deleteRoom, getAllRooms, getRoomById, updateRoom } from "../controller/booking"
+const { createRoom, deleteRoom, getAllRooms, getRoomById, updateRoom } = require("../controller/booking");
 
 bookingRoute.post('/AddRoom/:hotelid',createRoom)  
 bookingRoute.put('/UpdateRoom/:id',updateRoom)

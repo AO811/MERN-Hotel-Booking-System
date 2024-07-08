@@ -1,9 +1,9 @@
 const express = require("express");
 const authRoute = express.Router();
 
-authRouter.get('/checkauthentication',verify,(req,res,next)=>{
+authRoute.get('/checkauthentication',(req,res,next)=>{
     console.log(req);
     res.send("You are authenticated");
 })
 
-module.exports = Router;
+module.exports = authRoute;

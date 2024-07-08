@@ -6,8 +6,8 @@ const {deleteuser, getAllUser, login, register, updateUser} = require("../contro
 
 userRoute.post('/AddUser',register);
 userRoute.get('/',getAllUser);
-userRoute.put('/UpdateUser/:id',verifyUser,updateUser);
-userRoute.delete('/DeleteUser/:id',verifyUser,deleteuser);
+userRoute.put('/UpdateUser/:id',updateUser);
+userRoute.delete('/DeleteUser/:id',deleteuser);
 userRoute.get('/Login',login);
 
 module.exports = userRoute;

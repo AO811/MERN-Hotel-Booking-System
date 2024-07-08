@@ -1,6 +1,6 @@
 const express = require("express");
 const mongoose = require("mongoose");
-import Room from "../model/bookingSchema";
+const Room = require("../model/bookingSchema");
 
 exports.createRoom = async (req, res, next) => {
     try {
