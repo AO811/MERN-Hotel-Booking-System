@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { Link } from 'react-router-dom';
 
@@ -8,8 +8,8 @@ const RoomList = () => {
   useEffect(() => {
     const fetchRooms = async () => {
       try {
-        const res = await axios.get('/api/rooms');
-        setRooms(res.data);
+        const response = await axios.get('http://localhost:4000/bookingRoute');
+        setRooms(response.data);
       } catch (error) {
         console.error(error);
       }
@@ -24,7 +24,9 @@ const RoomList = () => {
       <ul>
         {rooms.map((room) => (
           <li key={room._id}>
-            <Link to={`/room/${room._id}`}>{room.name}</Link>
+            <Link to={`/room/${room._id}`}>
+              {room.name} - {room.roomtype}
+            </Link>
           </li>
         ))}
       </ul>
