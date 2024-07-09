@@ -9,7 +9,7 @@ const RoomDetail = () => {
   useEffect(() => {
     const fetchRoom = async () => {
       try {
-        const response = await axios.get(`http://localhost:4000/bookingRoute/${id}`);
+        const response = await axios.get(`http://localhost:4000/bookingRoute/GetRoom/${id}`);
         setRoom(response.data);
       } catch (error) {
         console.error(error);

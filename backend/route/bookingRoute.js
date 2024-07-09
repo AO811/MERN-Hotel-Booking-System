@@ -7,7 +7,7 @@ const { createRoom, deleteRoom, getAllRooms, getRoomById, updateRoom } = require
 bookingRoute.post('/createRoom/',createRoom)  
 bookingRoute.put('/UpdateRoom/:id',updateRoom)
 bookingRoute.delete('/DeleteRoom/',deleteRoom)
-bookingRoute.get("/GetRoom/",getRoomById)
+bookingRoute.get("/GetRoom/:id",getRoomById)
 bookingRoute.get("/",getAllRooms)
 
 module.exports = bookingRoute;
