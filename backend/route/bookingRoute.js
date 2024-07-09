@@ -4,10 +4,10 @@ const bookingRoute = express.Router();
 
 const { createRoom, deleteRoom, getAllRooms, getRoomById, updateRoom } = require("../controller/booking");
 
-bookingRoute.post('/AddRoom/:hotelid',createRoom)  
-bookingRoute.put('/UpdateRoom/:id',updateRoom)
-bookingRoute.delete('/DeleteRoom/:id/:hotelid',deleteRoom)
-bookingRoute.get("/GetRoom/:id",getRoomById)
+bookingRoute.post('/createRoom/:id',createRoom)  
+bookingRoute.put('/UpdateRoom/',updateRoom)
+bookingRoute.delete('/DeleteRoom/',deleteRoom)
+bookingRoute.get("/GetRoom/",getRoomById)
 bookingRoute.get("/",getAllRooms)
 
 module.exports = bookingRoute;

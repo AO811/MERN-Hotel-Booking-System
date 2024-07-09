@@ -8,7 +8,7 @@ export const createRoom = async (roomData) => {
     return response.data;
   } catch (error) {
     console.error('Error while creating room:', error);
-    throw error; // Re-throw the error to be handled by the caller
+    throw error; 
   }
 };
 
@@ -18,7 +18,7 @@ export const deleteRoom = async (roomId) => {
     return response.data;
   } catch (error) {
     console.error('Error while deleting room:', error);
-    throw error; // Re-throw the error to be handled by the caller
+    throw error; 
   }
 };
 
@@ -28,7 +28,7 @@ export const getAllRooms = async () => {
     return response.data;
   } catch (error) {
     console.error('Error while fetching rooms:', error);
-    throw error; // Re-throw the error to be handled by the caller
+    throw error; 
   }
 };
 
@@ -38,7 +38,7 @@ export const getRoomById = async (roomId) => {
     return response.data;
   } catch (error) {
     console.error(`Error while fetching room with ID ${roomId}:`, error);
-    throw error; // Re-throw the error to be handled by the caller
+    throw error; 
   }
 };
 
@@ -48,6 +48,6 @@ export const updateRoom = async (roomId, roomData) => {
     return response.data;
   } catch (error) {
     console.error(`Error while updating room with ID ${roomId}:`, error);
-    throw error; // Re-throw the error to be handled by the caller
+    throw error; 
   }
 };

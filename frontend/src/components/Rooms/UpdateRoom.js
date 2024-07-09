@@ -15,7 +15,7 @@ const UpdateRoom = () => {
   useEffect(() => {
     const fetchRoom = async () => {
       try {
-        const response = await axios.get(`http://localhost:4000/bookingRoute/${id}`);
+        const response = await axios.get(`http://localhost:4000/bookingRoute/UpdateRoom/${id}`);
         const room = response.data;
         setName(room.name);
         setEmail(room.email);
