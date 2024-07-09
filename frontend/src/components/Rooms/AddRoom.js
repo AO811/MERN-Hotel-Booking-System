@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import axios from 'axios';
-import 'bootstrap/dist/css/bootstrap.min.css'; // Ensure Bootstrap CSS is imported
+import 'bootstrap/dist/css/bootstrap.min.css'; 
 
 const AddRoom = () => {
   const [name, setName] = useState('');
@@ -71,16 +71,20 @@ const AddRoom = () => {
                   />
                 </div>
                 <div className="form-group">
-                  <label htmlFor="roomtype">Room Type</label>
-                  <input
-                    type="text"
-                    id="roomtype"
-                    className="form-control"
-                    placeholder="Enter room type"
-                    value={roomtype}
-                    onChange={(e) => setRoomtype(e.target.value)}
-                  />
-                </div>
+          <label htmlFor="roomtype">Room Type</label>
+          <select
+            id="roomtype"
+            className="form-control"
+            value={roomtype}
+            onChange={(e) => setRoomtype(e.target.value)}
+          >
+            <option value="">Select room type</option>
+            <option value="AC/Deluxe">AC/Deluxe</option>
+            <option value="AC/Executive">AC/Executive</option>
+            <option value="Non-AC/Deluxe">Non-AC/Deluxe</option>
+            <option value="Non-AC/Executive">Non-AC/Executive</option>
+          </select>
+        </div>
                 <div className="form-group">
                   <label htmlFor="checkindate">Check-in Date</label>
                   <input
