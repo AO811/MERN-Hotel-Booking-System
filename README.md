@@ -1,3 +1,5 @@
+# Hotel Booking System
+
 A full-stack application built using the MERN stack to streamline hotel room bookings with a modern, user-friendly interface.
 
 ### Technologies Used:
