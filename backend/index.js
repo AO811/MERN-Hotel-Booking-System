@@ -2,28 +2,49 @@ const express = require("express");
 const mongoose = require("mongoose");
 const bodyParser = require("body-parser");
 const cors = require("cors");
+const dotenv = require("dotenv");
+const cookieParser = require("cookie-parser");
+const morgan = require("morgan");
 
-const app=express();
+// Load environment variables
+dotenv.config();
 
-const userRoute = require("./route/userRoute");
-const bookingRoute = require("./route/bookingRoute");
-const authRoute = require("./route/authRoute");
-const bcrypt = require('bcryptjs');
+const app = express();
 
+// Middleware
 app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({extended:true}))
+app.use(bodyParser.urlencoded({ extended: true }));
 app.use(cors());
+app.use(cookieParser()); // ✅ now after app is defined
+app.use(morgan("dev"));
 
-mongoose.set("strictQuery",true);
-mongoose.connect("mongodb+srv://CRUD:abasaksr@cluster0.sfek0t7.mongodb.net/hotelbookingdb");
-var db=mongoose.connection;
-db.on("open",()=>console.log("Connected"))
-db.on("error",()=>console.log("Not Connected"))
+// Routes
+const userRoute = require("./routes/userRoute");
+const bookingRoute = require("./routes/bookingRoute");
+const authRoute = require("./routes/authRoute");
 
-app.use("/userRoute", userRoute);
-app.use("/bookingRoute", bookingRoute);
-app.use("/authRoute", authRoute);
+app.use("/api/users", userRoute);
+app.use("/api/bookings", bookingRoute);
+app.use("/api/auth", authRoute);
 
-app.listen(4000,()=>{
-    console.log("Server is running in the port 4000");
-})
+// Global error handler
+app.use((err, req, res, next) => {
+  console.error(err.stack);
+  res.status(500).json({ message: "Something went wrong!", error: err.message });
+});
+
+// MongoDB connection
+mongoose.set("strictQuery", true);
+mongoose
+  .connect(process.env.MONGO_URI, {
+    useNewUrlParser: true,
+    useUnifiedTopology: true
+  })
+  .then(() => console.log("✅ Connected to MongoDB"))
+  .catch((err) => console.error("❌ MongoDB connection error:", err));
+
+// Server listen
+const PORT = process.env.PORT || 4000;
+app.listen(PORT, () => {
+  console.log(`🚀 Server running on port ${PORT}`);
+});
