@@ -10,22 +10,18 @@ exports.register = async (req, res, next) => {
   try {
     const { name, email, password } = req.body;
 
-    // Hash password (if not already handled in schema)
+    // Check duplicate email
+    const existingUser = await User.findOne({ email });
+    if (existingUser) return next(createError(400, "User already exists"));
+
     const salt = await bcrypt.genSalt(10);
     const hashedPassword = await bcrypt.hash(password, salt);
 
-    const newUser = new User({
-      name,
-      email,
-      password: hashedPassword,
-    });
+    const newUser = new User({ name, email, password: hashedPassword });
+    await newUser.save();
 
-    const savedUser = await newUser.save();
     res.status(201).json("User has been added");
   } catch (error) {
-    if (error.code === 11000) {
-      return next(createError(400, "User already exists"));
-    }
     next(error);
   }
 };
@@ -42,10 +38,12 @@ exports.deleteuser = async (req, res, next) => {
 
 // LOGIN
 exports.login = async (req, res, next) => {
-  const { name, password } = req.body;
+  const { usernameOrEmail, password } = req.body;
 
   try {
-    const user = await User.findOne({ $or: [{ name }, { email: name }] });
+    const user = await User.findOne({
+      $or: [{ name: usernameOrEmail }, { email: usernameOrEmail }],
+    });
     if (!user) return next(createError(404, "User not found"));
 
     const isPasswordCorrect = await bcrypt.compare(password, user.password);
@@ -65,7 +63,7 @@ exports.login = async (req, res, next) => {
       .cookie("accessToken", token, {
         httpOnly: true,
         secure: process.env.NODE_ENV === "production",
-        sameSite: "strict",
+        sameSite: process.env.NODE_ENV === "production" ? "none" : "lax",
       })
       .status(200)
       .json(otherDetails);
@@ -77,11 +75,17 @@ exports.login = async (req, res, next) => {
 // UPDATE USER
 exports.updateUser = async (req, res, next) => {
   try {
+    if (req.body.password) {
+      const salt = await bcrypt.genSalt(10);
+      req.body.password = await bcrypt.hash(req.body.password, salt);
+    }
+
     const updatedUser = await User.findByIdAndUpdate(
       req.params.id,
       { $set: req.body },
       { new: true }
-    );
+    ).select("-password");
+
     res.status(200).json(updatedUser);
   } catch (error) {
     next(error);
@@ -91,8 +95,8 @@ exports.updateUser = async (req, res, next) => {
 // GET ALL USERS
 exports.getAllUser = async (req, res, next) => {
   try {
-    const users = await User.find();
-    res.status(200).json(users); // always return array
+    const users = await User.find().select("-password");
+    res.status(200).json(users);
   } catch (error) {
     next(error);
   }
