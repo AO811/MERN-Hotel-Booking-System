@@ -9,10 +9,9 @@ const Header = () => {
           <ul className="navbar-nav mr-auto" style={{ display: 'flex', gap: '10px' }}>
             <li className="nav-item">
               <NavLink 
-                exact 
+                end
                 to="/" 
-                activeClassName="active-link" 
-                className="nav-link text-primary"
+                className={({ isActive }) => `nav-link text-primary${isActive ? ' active-link' : ''}`}
                 style={{ backgroundColor: '#e3f2fd', borderRadius: '5px', padding: '10px' }}
               >
                 Home
@@ -21,8 +20,7 @@ const Header = () => {
             <li className="nav-item">
               <NavLink 
                 to="/login" 
-                activeClassName="active-link" 
-                className="nav-link text-success"
+                className={({ isActive }) => `nav-link text-success${isActive ? ' active-link' : ''}`}
                 style={{ backgroundColor: '#d4edda', borderRadius: '5px', padding: '10px' }}
               >
                 Login
@@ -31,8 +29,7 @@ const Header = () => {
             <li className="nav-item">
               <NavLink 
                 to="/register" 
-                activeClassName="active-link" 
-                className="nav-link text-warning"
+                className={({ isActive }) => `nav-link text-warning${isActive ? ' active-link' : ''}`}
                 style={{ backgroundColor: '#fff3cd', borderRadius: '5px', padding: '10px' }}
               >
                 Register
@@ -41,8 +38,7 @@ const Header = () => {
             <li className="nav-item">
               <NavLink 
                 to="/rooms" 
-                activeClassName="active-link" 
-                className="nav-link text-info"
+                className={({ isActive }) => `nav-link text-info${isActive ? ' active-link' : ''}`}
                 style={{ backgroundColor: '#d1ecf1', borderRadius: '5px', padding: '10px' }}
               >
                 Room List
@@ -51,8 +47,7 @@ const Header = () => {
             <li className="nav-item">
               <NavLink 
                 to="/add-room" 
-                activeClassName="active-link" 
-                className="nav-link text-danger"
+                className={({ isActive }) => `nav-link text-danger${isActive ? ' active-link' : ''}`}
                 style={{ backgroundColor: '#f8d7da', borderRadius: '5px', padding: '10px' }}
               >
                 Add Room

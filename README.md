@@ -23,3 +23,39 @@ A full-stack application built using the MERN stack to streamline hotel room boo
 - Node.js
 
 This project demonstrates robust full-stack development, focusing on usability and functionality.
+
+## Local development
+
+Install dependencies and run the backend and frontend in separate terminals:
+
+```powershell
+cd backend
+npm ci
+Copy-Item .env.example .env
+npm run dev
+```
+
+```powershell
+cd frontend
+npm ci
+Copy-Item .env.example .env
+npm start
+```
+
+The backend runs with the database disabled by default; API requests return HTTP
+503 in this mode. To use database-backed features, make sure MongoDB is running,
+then set `DATABASE_ENABLED=true` and configure `MONGO_URI` in `backend/.env`.
+The frontend API base URL can be changed with `REACT_APP_API_URL` in
+`frontend/.env`.
+
+To grant admin access, first register the account, then promote it directly in
+MongoDB with `db.users.updateOne({ email: "admin@example.com" }, { $set: { role: "admin" } })`.
+The admin must log in again for the new role to take effect. Booking create,
+update, and delete operations remain admin-only.
+
+Run frontend checks from `frontend`:
+
+```powershell
+npm test -- --watchAll=false
+npm run build
+```

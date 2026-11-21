@@ -1,24 +1,25 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, Link } from 'react-router-dom';
-import axios from 'axios';
+import { getRoomById } from '../../services/roomService';
 
 const RoomDetail = () => {
   const { id } = useParams();
   const [room, setRoom] = useState(null);
+  const [error, setError] = useState('');
 
   useEffect(() => {
     const fetchRoom = async () => {
       try {
-        const response = await axios.get(`http://localhost:4000/bookingRoute/GetRoom/${id}`);
-        setRoom(response.data);
+        setRoom(await getRoomById(id));
       } catch (error) {
-        console.error(error);
+        setError(error.response?.data?.message || 'Unable to load this room. Please try again.');
       }
     };
 
     fetchRoom();
   }, [id]);
 
+  if (error) return <p className="container mt-4" role="alert">{error}</p>;
   if (!room) return <div>Loading...</div>;
 
   return (

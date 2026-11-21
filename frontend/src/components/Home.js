@@ -1,4 +1,5 @@
 import React from 'react';
+import { Link } from 'react-router-dom';
 
 const Home = () => {
   return (
@@ -8,7 +9,7 @@ const Home = () => {
         <p className="lead">Your premier destination for booking rooms online.</p>
         <hr className="my-4" />
         <p>Explore our rooms and start planning your stay with us today!</p>
-        <a className="btn btn-primary btn-lg" href="/rooms" role="button">View Rooms</a>
+        <Link className="btn btn-primary btn-lg" to="/rooms" role="button">View Rooms</Link>
       </div>
     </div>
   );

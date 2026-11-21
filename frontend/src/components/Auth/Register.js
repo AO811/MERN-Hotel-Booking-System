@@ -1,19 +1,20 @@
 import React, { useState } from 'react';
-import axios from 'axios';
-import 'bootstrap/dist/css/bootstrap.min.css'; 
+import { register } from '../../services/authService';
+import 'bootstrap/dist/css/bootstrap.min.css';
 
 const Register = () => {
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [message, setMessage] = useState('');
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const response = await axios.post('http://localhost:4000/userRoute/register', { name, email, password });
-      console.log(response.data);
+      await register({ name, email, password });
+      setMessage('Registration successful. You can now log in.');
     } catch (error) {
-      console.error(error);
+      setMessage(error.response?.data?.message || 'Unable to register. Please try again.');
     }
   };
 
@@ -32,6 +33,7 @@ const Register = () => {
                     id="name"
                     className="form-control"
                     placeholder="Enter your name"
+                    required
                     value={name}
                     onChange={(e) => setName(e.target.value)}
                   />
@@ -43,6 +45,7 @@ const Register = () => {
                     id="email"
                     className="form-control"
                     placeholder="Enter your email"
+                    required
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
                   />
@@ -54,6 +57,8 @@ const Register = () => {
                     id="password"
                     className="form-control"
                     placeholder="Enter your password"
+                    minLength={6}
+                    required
                     value={password}
                     onChange={(e) => setPassword(e.target.value)}
                   />
@@ -61,6 +66,7 @@ const Register = () => {
                 <button type="submit" className="btn btn-primary btn-block mt-3">
                   Register
                 </button>
+                {message && <p className="mt-3" role="status">{message}</p>}
               </form>
             </div>
           </div>

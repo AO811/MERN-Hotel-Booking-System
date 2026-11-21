@@ -1,5 +1,3 @@
-const express = require("express");
-const mongoose = require("mongoose");
 const User = require("../models/userSchema.js");
 const bcrypt = require("bcryptjs");
 const { createError } = require("../utilities/error.js");
@@ -14,10 +12,7 @@ exports.register = async (req, res, next) => {
     const existingUser = await User.findOne({ email });
     if (existingUser) return next(createError(400, "User already exists"));
 
-    const salt = await bcrypt.genSalt(10);
-    const hashedPassword = await bcrypt.hash(password, salt);
-
-    const newUser = new User({ name, email, password: hashedPassword });
+    const newUser = new User({ name, email, password });
     await newUser.save();
 
     res.status(201).json("User has been added");
@@ -51,11 +46,12 @@ exports.login = async (req, res, next) => {
       return next(createError(400, "Password or Username is not correct"));
     }
 
-    const { password: pwd, ...otherDetails } = user._doc;
+    const otherDetails = user.toObject();
+    delete otherDetails.password;
 
     const token = jwt.sign(
-      { id: user._id, name: user.name },
-      process.env.JWT_SECRETKEY,
+      { id: user._id, name: user.name, role: user.role },
+      process.env.JWT_SECRET || "yoursecretkey",
       { expiresIn: "1h" }
     );
 
@@ -80,9 +76,12 @@ exports.updateUser = async (req, res, next) => {
       req.body.password = await bcrypt.hash(req.body.password, salt);
     }
 
+    const userUpdates = { ...req.body };
+    delete userUpdates.role;
+
     const updatedUser = await User.findByIdAndUpdate(
       req.params.id,
-      { $set: req.body },
+      { $set: userUpdates },
       { new: true }
     ).select("-password");
 

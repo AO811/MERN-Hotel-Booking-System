@@ -26,7 +26,6 @@ exports.deleteRoom = async (req, res, next) => {
 exports.getAllRooms = async (req, res, next) => {
   try {
     const bookings = await Booking.find();
-    if (!bookings.length) return res.status(404).json({ message: "No bookings found" });
     res.status(200).json(bookings);
   } catch (error) {
     next(error);

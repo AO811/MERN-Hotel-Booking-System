@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
-import axios from 'axios';
-import 'bootstrap/dist/css/bootstrap.min.css'; 
+import { createRoom } from '../../services/roomService';
+import 'bootstrap/dist/css/bootstrap.min.css';
 
 const AddRoom = () => {
   const [name, setName] = useState('');
@@ -10,11 +10,12 @@ const AddRoom = () => {
   const [checkindate, setCheckindate] = useState('');
   const [checkoutdate, setCheckoutdate] = useState('');
   const [adhaar, setAdhaar] = useState('');
+  const [message, setMessage] = useState('');
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const response = await axios.post('http://localhost:4000/bookingRoute/createRoom/', {
+      await createRoom({
         name,
         email,
         phone,
@@ -23,9 +24,9 @@ const AddRoom = () => {
         checkoutdate,
         adhaar,
       });
-      console.log(response.data);
+      setMessage('Room booking created successfully.');
     } catch (error) {
-      console.error(error);
+      setMessage(error.response?.data?.message || 'Unable to create the booking. Please try again.');
     }
   };
 
@@ -44,6 +45,7 @@ const AddRoom = () => {
                     id="name"
                     className="form-control"
                     placeholder="Enter your name"
+                    required
                     value={name}
                     onChange={(e) => setName(e.target.value)}
                   />
@@ -55,6 +57,7 @@ const AddRoom = () => {
                     id="email"
                     className="form-control"
                     placeholder="Enter your email"
+                    required
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
                   />
@@ -66,6 +69,7 @@ const AddRoom = () => {
                     id="phone"
                     className="form-control"
                     placeholder="Enter your phone number"
+                    required
                     value={phone}
                     onChange={(e) => setPhone(e.target.value)}
                   />
@@ -75,14 +79,14 @@ const AddRoom = () => {
           <select
             id="roomtype"
             className="form-control"
+            required
             value={roomtype}
             onChange={(e) => setRoomtype(e.target.value)}
           >
             <option value="">Select room type</option>
-            <option value="AC/Deluxe">AC/Deluxe</option>
-            <option value="AC/Executive">AC/Executive</option>
-            <option value="Non-AC/Deluxe">Non-AC/Deluxe</option>
-            <option value="Non-AC/Executive">Non-AC/Executive</option>
+            <option value="Single">Single</option>
+            <option value="Double">Double</option>
+            <option value="Suite">Suite</option>
           </select>
         </div>
                 <div className="form-group">
@@ -92,6 +96,7 @@ const AddRoom = () => {
                     id="checkindate"
                     className="form-control"
                     placeholder="Enter check-in date"
+                    required
                     value={checkindate}
                     onChange={(e) => setCheckindate(e.target.value)}
                   />
@@ -103,6 +108,7 @@ const AddRoom = () => {
                     id="checkoutdate"
                     className="form-control"
                     placeholder="Enter check-out date"
+                    required
                     value={checkoutdate}
                     onChange={(e) => setCheckoutdate(e.target.value)}
                   />
@@ -114,6 +120,7 @@ const AddRoom = () => {
                     id="adhaar"
                     className="form-control"
                     placeholder="Enter Adhaar number"
+                    required
                     value={adhaar}
                     onChange={(e) => setAdhaar(e.target.value)}
                   />
@@ -121,6 +128,7 @@ const AddRoom = () => {
                 <button type="submit" className="btn btn-primary btn-block mt-3">
                   Add Room
                 </button>
+                {message && <p className="mt-3" role="status">{message}</p>}
               </form>
             </div>
           </div>

@@ -1,18 +1,19 @@
 import React, { useState } from 'react';
-import axios from 'axios';
-import 'bootstrap/dist/css/bootstrap.min.css'; 
+import { login } from '../../services/authService';
+import 'bootstrap/dist/css/bootstrap.min.css';
 
 const Login = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [message, setMessage] = useState('');
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const response = await axios.post('http://localhost:4000/userRoute/login', { email, password });
-      console.log(response.data);
+      await login({ email, password });
+      setMessage('Login successful.');
     } catch (error) {
-      console.error(error);
+      setMessage(error.response?.data?.message || 'Unable to log in. Please try again.');
     }
   };
 
@@ -31,6 +32,7 @@ const Login = () => {
                     id="email"
                     className="form-control"
                     placeholder="Enter your email"
+                    required
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
                   />
@@ -42,6 +44,7 @@ const Login = () => {
                     id="password"
                     className="form-control"
                     placeholder="Enter your password"
+                    required
                     value={password}
                     onChange={(e) => setPassword(e.target.value)}
                   />
@@ -49,6 +52,7 @@ const Login = () => {
                 <button type="submit" className="btn btn-primary btn-block mt-3">
                   Login
                 </button>
+                {message && <p className="mt-3" role="status">{message}</p>}
               </form>
             </div>
           </div>
