@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { useParams } from 'react-router-dom';
+import { Link, useParams } from 'react-router-dom';
 import { getRoomById, updateRoom } from '../../services/roomService';
 
 const UpdateRoom = () => {
@@ -11,7 +11,9 @@ const UpdateRoom = () => {
   const [checkindate, setCheckindate] = useState('');
   const [checkoutdate, setCheckoutdate] = useState('');
   const [adhaar, setAdhaar] = useState('');
-  const [message, setMessage] = useState('');
+  const [message, setMessage] = useState(null);
+  const [loadError, setLoadError] = useState('');
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const fetchRoom = async () => {
@@ -25,7 +27,9 @@ const UpdateRoom = () => {
         setCheckoutdate(new Date(room.checkoutdate).toISOString().slice(0, 10));
         setAdhaar(room.adhaar);
       } catch (error) {
-        setMessage(error.response?.data?.message || 'Unable to load this room. Please try again.');
+        setLoadError(error.response?.data?.message || 'Unable to load this booking. Please try again.');
+      } finally {
+        setLoading(false);
       }
     };
 
@@ -44,66 +48,82 @@ const UpdateRoom = () => {
         checkoutdate,
         adhaar,
       });
-      setMessage('Room booking updated successfully.');
+      setMessage({ type: 'success', text: 'Your booking has been updated.' });
     } catch (error) {
-      setMessage(error.response?.data?.message || 'Unable to update the booking. Please try again.');
+      setMessage({
+        type: 'error',
+        text: error.response?.data?.message || 'Unable to update the booking. Please try again.',
+      });
     }
   };
 
   return (
-    <div>
-      <h2>Update Room</h2>
-      <form onSubmit={handleSubmit}>
-        <input
-          type="text"
-          placeholder="Name"
-          value={name}
-          onChange={(e) => setName(e.target.value)}
-        />
-        <input
-          type="email"
-          placeholder="Email"
-          value={email}
-          onChange={(e) => setEmail(e.target.value)}
-        />
-        <input
-          type="tel"
-          placeholder="Phone"
-          value={phone}
-          onChange={(e) => setPhone(e.target.value)}
-        />
-        <select
-          aria-label="Room Type"
-          value={roomtype}
-          onChange={(e) => setRoomtype(e.target.value)}
-        >
-          <option value="">Select room type</option>
-          <option value="Single">Single</option>
-          <option value="Double">Double</option>
-          <option value="Suite">Suite</option>
-        </select>
-        <input
-          type="date"
-          placeholder="Check-in Date"
-          value={checkindate}
-          onChange={(e) => setCheckindate(e.target.value)}
-        />
-        <input
-          type="date"
-          placeholder="Check-out Date"
-          value={checkoutdate}
-          onChange={(e) => setCheckoutdate(e.target.value)}
-        />
-        <input
-          type="text"
-          placeholder="Adhaar"
-          value={adhaar}
-          onChange={(e) => setAdhaar(e.target.value)}
-        />
-        <button type="submit">Update Room</button>
-        {message && <p role="status">{message}</p>}
-      </form>
-    </div>
+    <main className="form-page">
+      <Link className="stay-card__action" to={`/room/${id}`}>← Back to booking</Link>
+      <header className="form-heading">
+        <p className="eyebrow"><span className="eyebrow__dot" />Keep the details up to date</p>
+        <h1>Edit your booking</h1>
+        <p>Make changes to the guest or stay information below.</p>
+      </header>
+
+      {loading && <div className="message-panel" role="status">Loading booking details…</div>}
+      {!loading && loadError && (
+        <div className="message-panel message-panel--error" role="alert">{loadError}</div>
+      )}
+      {!loading && !loadError && (
+        <section className="form-card">
+          {message && (
+            <div
+              className={`message-panel message-panel--${message.type}`}
+              role={message.type === 'error' ? 'alert' : 'status'}
+            >
+              {message.text}
+            </div>
+          )}
+          <form onSubmit={handleSubmit}>
+            <div className="form-grid">
+              <div className="form-field">
+                <label htmlFor="name">Guest name</label>
+                <input id="name" type="text" autoComplete="name" required value={name} onChange={(e) => setName(e.target.value)} />
+              </div>
+              <div className="form-field">
+                <label htmlFor="email">Email address</label>
+                <input id="email" type="email" autoComplete="email" required value={email} onChange={(e) => setEmail(e.target.value)} />
+              </div>
+              <div className="form-field">
+                <label htmlFor="phone">Phone number</label>
+                <input id="phone" type="tel" autoComplete="tel" required value={phone} onChange={(e) => setPhone(e.target.value)} />
+              </div>
+              <div className="form-field">
+                <label htmlFor="roomtype">Room type</label>
+                <select id="roomtype" required value={roomtype} onChange={(e) => setRoomtype(e.target.value)}>
+                  <option value="">Choose a room</option>
+                  <option value="Single">Single</option>
+                  <option value="Double">Double</option>
+                  <option value="Suite">Suite</option>
+                </select>
+              </div>
+              <div className="form-field">
+                <label htmlFor="checkindate">Check-in</label>
+                <input id="checkindate" type="date" required value={checkindate} onChange={(e) => setCheckindate(e.target.value)} />
+              </div>
+              <div className="form-field">
+                <label htmlFor="checkoutdate">Check-out</label>
+                <input id="checkoutdate" type="date" min={checkindate || undefined} required value={checkoutdate} onChange={(e) => setCheckoutdate(e.target.value)} />
+              </div>
+              <div className="form-field form-field--wide">
+                <label htmlFor="adhaar">Aadhaar number</label>
+                <input id="adhaar" type="text" autoComplete="off" required value={adhaar} onChange={(e) => setAdhaar(e.target.value)} />
+              </div>
+            </div>
+            <div className="form-card__footer">
+              <span className="form-card__hint">Double-check your dates before saving.</span>
+              <button type="submit" className="button button--primary">Save changes <span aria-hidden="true">→</span></button>
+            </div>
+          </form>
+        </section>
+      )}
+    </main>
   );
 };
 

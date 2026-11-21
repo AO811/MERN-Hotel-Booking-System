@@ -1,6 +1,6 @@
 import React from 'react';
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
-import "../node_modules/bootstrap/dist/css/bootstrap.min.css";
+import './App.css';
 import Header from './components/Header';
 import Home from './components/Home';
 import Login from './components/Auth/Login';
@@ -23,6 +23,9 @@ function App() {
         <Route path="/room/:id" element={<RoomDetail />} />
         <Route path="/update-room/:id" element={<UpdateRoom />} />
       </Routes>
+      <footer className="site-footer">
+        <div className="ui-container">A little more room for the moments that matter.</div>
+      </footer>
     </Router>
   );
 }
