@@ -1,59 +1,53 @@
-import React from 'react';
-import { NavLink } from 'react-router-dom';
-import 'bootstrap/dist/css/bootstrap.min.css'; 
+import React, { useState } from 'react';
+import { Link, NavLink } from 'react-router-dom';
+
 const Header = () => {
+  const [menuOpen, setMenuOpen] = useState(false);
+
+  const closeMenu = () => setMenuOpen(false);
+  const navClass = ({ isActive }) =>
+    `site-nav__link${isActive ? ' is-active' : ''}`;
+
   return (
-    <header>
-      <nav className="navbar navbar-expand-lg navbar-light" style={{ backgroundColor: '#f8f9fa' }}>
-        <div className="container-fluid">
-          <ul className="navbar-nav mr-auto" style={{ display: 'flex', gap: '10px' }}>
-            <li className="nav-item">
-              <NavLink 
-                end
-                to="/" 
-                className={({ isActive }) => `nav-link text-primary${isActive ? ' active-link' : ''}`}
-                style={{ backgroundColor: '#e3f2fd', borderRadius: '5px', padding: '10px' }}
-              >
-                Home
-              </NavLink>
-            </li>
-            <li className="nav-item">
-              <NavLink 
-                to="/login" 
-                className={({ isActive }) => `nav-link text-success${isActive ? ' active-link' : ''}`}
-                style={{ backgroundColor: '#d4edda', borderRadius: '5px', padding: '10px' }}
-              >
-                Login
-              </NavLink>
-            </li>
-            <li className="nav-item">
-              <NavLink 
-                to="/register" 
-                className={({ isActive }) => `nav-link text-warning${isActive ? ' active-link' : ''}`}
-                style={{ backgroundColor: '#fff3cd', borderRadius: '5px', padding: '10px' }}
-              >
-                Register
-              </NavLink>
-            </li>
-            <li className="nav-item">
-              <NavLink 
-                to="/rooms" 
-                className={({ isActive }) => `nav-link text-info${isActive ? ' active-link' : ''}`}
-                style={{ backgroundColor: '#d1ecf1', borderRadius: '5px', padding: '10px' }}
-              >
-                Room List
-              </NavLink>
-            </li>
-            <li className="nav-item">
-              <NavLink 
-                to="/add-room" 
-                className={({ isActive }) => `nav-link text-danger${isActive ? ' active-link' : ''}`}
-                style={{ backgroundColor: '#f8d7da', borderRadius: '5px', padding: '10px' }}
-              >
-                Add Room
-              </NavLink>
-            </li>
-          </ul>
+    <header className="site-header">
+      <nav className="site-nav" aria-label="Main navigation">
+        <div className="site-nav__identity">
+          <Link className="site-brand" to="/" onClick={closeMenu} aria-label="Haven Hotel home">
+            <span className="site-brand__mark" aria-hidden="true">H</span>
+            <span className="site-brand__text">
+              <strong>Haven</strong>
+              <small>HOTEL &amp; STAYS</small>
+            </span>
+          </Link>
+          <button
+            className="site-nav__toggle"
+            type="button"
+            aria-label={menuOpen ? 'Close navigation menu' : 'Open navigation menu'}
+            aria-expanded={menuOpen}
+            aria-controls="primary-navigation"
+            onClick={() => setMenuOpen((isOpen) => !isOpen)}
+          >
+            <span />
+          </button>
+        </div>
+
+        <div
+          className={`site-nav__links${menuOpen ? ' is-open' : ''}`}
+          id="primary-navigation"
+        >
+          <NavLink className={navClass} end to="/" onClick={closeMenu}>Home</NavLink>
+          <NavLink className={navClass} to="/rooms" onClick={closeMenu}>My stays</NavLink>
+          <NavLink className={navClass} to="/add-room" onClick={closeMenu}>New booking</NavLink>
+          <NavLink className={navClass} to="/login" onClick={closeMenu}>Log in</NavLink>
+          <NavLink
+            className={({ isActive }) =>
+              `site-nav__link site-nav__link--account${isActive ? ' is-active' : ''}`
+            }
+            to="/register"
+            onClick={closeMenu}
+          >
+            Create account
+          </NavLink>
         </div>
       </nav>
     </header>

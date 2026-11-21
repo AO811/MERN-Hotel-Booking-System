@@ -1,78 +1,88 @@
 import React, { useState } from 'react';
+import { Link } from 'react-router-dom';
 import { register } from '../../services/authService';
-import 'bootstrap/dist/css/bootstrap.min.css';
 
 const Register = () => {
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const [message, setMessage] = useState('');
+  const [message, setMessage] = useState(null);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
       await register({ name, email, password });
-      setMessage('Registration successful. You can now log in.');
+      setMessage({ type: 'success', text: 'Your account is ready. You can log in now.' });
     } catch (error) {
-      setMessage(error.response?.data?.message || 'Unable to register. Please try again.');
+      setMessage({
+        type: 'error',
+        text: error.response?.data?.message || 'Unable to register. Please try again.',
+      });
     }
   };
 
   return (
-    <div className="container mt-5">
-      <div className="row justify-content-center">
-        <div className="col-md-6">
-          <div className="card">
-            <div className="card-body">
-              <h2 className="card-title text-center">Register</h2>
-              <form onSubmit={handleSubmit}>
-                <div className="form-group">
-                  <label htmlFor="name">Name</label>
-                  <input
-                    type="text"
-                    id="name"
-                    className="form-control"
-                    placeholder="Enter your name"
-                    required
-                    value={name}
-                    onChange={(e) => setName(e.target.value)}
-                  />
-                </div>
-                <div className="form-group">
-                  <label htmlFor="email">Email</label>
-                  <input
-                    type="email"
-                    id="email"
-                    className="form-control"
-                    placeholder="Enter your email"
-                    required
-                    value={email}
-                    onChange={(e) => setEmail(e.target.value)}
-                  />
-                </div>
-                <div className="form-group">
-                  <label htmlFor="password">Password</label>
-                  <input
-                    type="password"
-                    id="password"
-                    className="form-control"
-                    placeholder="Enter your password"
-                    minLength={6}
-                    required
-                    value={password}
-                    onChange={(e) => setPassword(e.target.value)}
-                  />
-                </div>
-                <button type="submit" className="btn btn-primary btn-block mt-3">
-                  Register
-                </button>
-                {message && <p className="mt-3" role="status">{message}</p>}
-              </form>
-            </div>
+    <main className="auth-page">
+      <section className="auth-intro">
+        <p className="eyebrow"><span className="eyebrow__dot" />Make yourself at home</p>
+        <h1>Good trips begin with a little room.</h1>
+        <p>Create an account to start planning the stay you’ve been looking forward to.</p>
+      </section>
+
+      <section className="auth-card">
+        <p className="eyebrow"><span className="eyebrow__dot" />Join Haven</p>
+        <h2>Create account</h2>
+        <p className="auth-card__description">A few details and you’re on your way.</p>
+        <form className="form-grid" onSubmit={handleSubmit}>
+          <div className="form-field">
+            <label htmlFor="name">Your name</label>
+            <input
+              type="text"
+              id="name"
+              autoComplete="name"
+              placeholder="Full name"
+              required
+              value={name}
+              onChange={(e) => setName(e.target.value)}
+            />
           </div>
-        </div>
-      </div>
-    </div>
+          <div className="form-field">
+            <label htmlFor="email">Email address</label>
+            <input
+              type="email"
+              id="email"
+              autoComplete="email"
+              placeholder="you@example.com"
+              required
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+            />
+          </div>
+          <div className="form-field">
+            <label htmlFor="password">Password</label>
+            <input
+              type="password"
+              id="password"
+              autoComplete="new-password"
+              minLength={6}
+              placeholder="At least 6 characters"
+              required
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+            />
+          </div>
+          <div className="form-card__footer">
+            <button type="submit" className="button button--primary">Create account <span aria-hidden="true">→</span></button>
+            <p className="auth-card__switch">Already have an account? <Link to="/login">Log in</Link></p>
+          </div>
+          {message && (
+            <div className={`message-panel message-panel--${message.type}`} role={message.type === 'error' ? 'alert' : 'status'}>
+              {message.text}
+            </div>
+          )}
+        </form>
+      </section>
+    </main>
   );
 };
 
