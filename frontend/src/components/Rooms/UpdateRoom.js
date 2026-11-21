@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
-import axios from 'axios';
+import { getRoomById, updateRoom } from '../../services/roomService';
 
 const UpdateRoom = () => {
   const { id } = useParams();
@@ -11,21 +11,21 @@ const UpdateRoom = () => {
   const [checkindate, setCheckindate] = useState('');
   const [checkoutdate, setCheckoutdate] = useState('');
   const [adhaar, setAdhaar] = useState('');
+  const [message, setMessage] = useState('');
 
   useEffect(() => {
     const fetchRoom = async () => {
       try {
-        const response = await axios.get(`http://localhost:4000/bookingRoute/UpdateRoom/${id}`);
-        const room = response.data;
+        const room = await getRoomById(id);
         setName(room.name);
         setEmail(room.email);
         setPhone(room.phone);
         setRoomtype(room.roomtype);
-        setCheckindate(room.checkindate);
-        setCheckoutdate(room.checkoutdate);
+        setCheckindate(new Date(room.checkindate).toISOString().slice(0, 10));
+        setCheckoutdate(new Date(room.checkoutdate).toISOString().slice(0, 10));
         setAdhaar(room.adhaar);
       } catch (error) {
-        console.error(error);
+        setMessage(error.response?.data?.message || 'Unable to load this room. Please try again.');
       }
     };
 
@@ -35,7 +35,7 @@ const UpdateRoom = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const response = await axios.put(`http://localhost:4000/bookingRoute/${id}`, {
+      await updateRoom(id, {
         name,
         email,
         phone,
@@ -44,9 +44,9 @@ const UpdateRoom = () => {
         checkoutdate,
         adhaar,
       });
-      console.log(response.data);
+      setMessage('Room booking updated successfully.');
     } catch (error) {
-      console.error(error);
+      setMessage(error.response?.data?.message || 'Unable to update the booking. Please try again.');
     }
   };
 
@@ -72,12 +72,16 @@ const UpdateRoom = () => {
           value={phone}
           onChange={(e) => setPhone(e.target.value)}
         />
-        <input
-          type="text"
-          placeholder="Room Type"
+        <select
+          aria-label="Room Type"
           value={roomtype}
           onChange={(e) => setRoomtype(e.target.value)}
-        />
+        >
+          <option value="">Select room type</option>
+          <option value="Single">Single</option>
+          <option value="Double">Double</option>
+          <option value="Suite">Suite</option>
+        </select>
         <input
           type="date"
           placeholder="Check-in Date"
@@ -97,6 +101,7 @@ const UpdateRoom = () => {
           onChange={(e) => setAdhaar(e.target.value)}
         />
         <button type="submit">Update Room</button>
+        {message && <p role="status">{message}</p>}
       </form>
     </div>
   );

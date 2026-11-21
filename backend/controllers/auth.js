@@ -35,7 +35,7 @@ const login = async (req, res) => {
 
     // Generate token
     const token = jwt.sign(
-      { id: user._id, email: user.email },
+      { id: user._id, email: user.email, role: user.role },
       process.env.JWT_SECRET || "yoursecretkey",
       { expiresIn: "1h" }
     );
@@ -44,7 +44,7 @@ const login = async (req, res) => {
     res.cookie("accessToken", token, {
       httpOnly: true,
       secure: process.env.NODE_ENV === "production", // only https in prod
-      sameSite: "strict",
+      sameSite: process.env.NODE_ENV === "production" ? "none" : "lax",
     });
 
     res.status(200).json({ message: "Login successful" });
